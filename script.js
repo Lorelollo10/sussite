@@ -34,6 +34,7 @@ if (fotoButton) {
 
 window.addEventListener("load", () => {
   const audio = document.getElementById("pageAudio");
+  const playButton = document.getElementById("playAudioButton");
 
   if (!audio) {
     return;
@@ -52,9 +53,23 @@ window.addEventListener("load", () => {
     return;
   }
 
-  const playPromise = audio.play();
-  if (playPromise) {
-    playPromise.catch(() => {});
-  }
-});
+  const attemptPlay = () => {
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        if (playButton) {
+          playButton.hidden = false;
+        }
+      });
+    }
+  };
 
+  if (playButton) {
+    playButton.addEventListener("click", () => {
+      playButton.hidden = true;
+      attemptPlay();
+    });
+  }
+
+  attemptPlay();
+});
