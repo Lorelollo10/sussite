@@ -22,12 +22,6 @@ const fotoButton = document.getElementById("fotoPageButton");
 
 if (fotoButton) {
   fotoButton.addEventListener("click", () => {
-    try {
-      localStorage.setItem("playFotoAudio", "1");
-    } catch {
-      // Ignore storage failures and still navigate.
-    }
-
     window.location.href = "foto.html";
   });
 }
@@ -40,40 +34,18 @@ window.addEventListener("load", () => {
     return;
   }
 
-  let shouldPlay = false;
-
-  try {
-    shouldPlay = localStorage.getItem("playFotoAudio") === "1";
-    localStorage.removeItem("playFotoAudio");
-  } catch {
-    return;
-  }
-
-  if (!shouldPlay) {
-    return;
-  }
-
-  if (playButton) {
-    playButton.hidden = false;
-  }
-
   const attemptPlay = () => {
     const playPromise = audio.play();
     if (playPromise) {
       playPromise.catch(() => {
-        if (playButton) {
-          playButton.hidden = false;
-        }
+        // Autoplay may be blocked; user can tap the button.
       });
     }
   };
 
   if (playButton) {
     playButton.addEventListener("click", () => {
-      playButton.hidden = true;
       attemptPlay();
     });
   }
-
-  attemptPlay();
 });
